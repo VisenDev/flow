@@ -6,6 +6,9 @@ const project_manager = @import("project_manager");
 const root = @import("root");
 const tracy = @import("tracy");
 const builtin = @import("builtin");
+const lua_api = @import("lua_api.zig");
+const ziglua = @import("ziglua");
+const Lua = ziglua.Lua;
 
 pub const renderer = @import("renderer");
 
@@ -48,6 +51,7 @@ final_exit: []const u8 = "normal",
 render_pending: bool = false,
 keepalive_timer: ?tp.Cancellable = null,
 mouse_idle_timer: ?tp.Cancellable = null,
+lua: *Lua,
 
 const keepalive = std.time.us_per_day * 365; // one year
 const idle_frames = 0;
@@ -109,9 +113,12 @@ fn init(allocator: Allocator) !*Self {
         .init_timer = try tp.timeout.init_ms(init_delay, tp.message.fmt(.{"init"})),
         .theme = theme,
         .no_sleep = tp.env.get().is("no-sleep"),
+        .lua = try Lua.init(allocator),
     };
     instance_ = self;
     defer instance_ = null;
+
+    lua_api.init(self.lua);
 
     self.rdr.handler_ctx = self;
     self.rdr.dispatch_input = dispatch_input;
@@ -141,6 +148,7 @@ fn init(allocator: Allocator) !*Self {
         self.logger.print("session restored", .{});
     }
     need_render();
+
     return self;
 }
 
@@ -171,6 +179,7 @@ fn deinit(self: *Self) void {
     self.rdr.stop();
     self.rdr.deinit();
     self.logger.deinit();
+    self.lua.deinit();
     self.allocator.destroy(self);
 }
 

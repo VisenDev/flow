@@ -37,6 +37,10 @@
             .url = "https://github.com/rockorager/zeit/archive/9cca8ec620a54c3b07cd249f25e5bcb3153d03d7.tar.gz",
             .hash = "1220755ea2a5aa6bb3713437aaafefd44812169fe43f1da755c3ee6101b85940f441",
         },
+        .ziglua = .{
+            .url = "https://github.com/natecraddock/ziglua/archive/refs/heads/zig-0.13.0.zip",
+            .hash = "12202f4249188ea25db5865f392be775958991d44898df69242b41e446a92c41dc7f",
+        },
     },
     .paths = .{
         "include",

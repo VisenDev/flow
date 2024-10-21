@@ -97,6 +97,12 @@ pub fn build(b: *std.Build) void {
         .enable_tracy = tracy_enabled,
     });
 
+    const ziglua_dep = b.dependency("ziglua", .{
+        .target = target,
+        .optimize = dependency_optimize,
+        .lang = .lua51,
+    });
+
     const thespian_mod = thespian_dep.module("thespian");
     const cbor_mod = thespian_dep.module("cbor");
 
@@ -212,6 +218,7 @@ pub fn build(b: *std.Build) void {
             .{ .name = "CaseData", .module = zg_dep.module("CaseData") },
             .{ .name = "fuzzig", .module = fuzzig_dep.module("fuzzig") },
             .{ .name = "zeit", .module = zeit_mod },
+            .{ .name = "ziglua", .module = ziglua_dep.module("ziglua") },
         },
     });
 
