@@ -1764,6 +1764,15 @@ pub const Editor = struct {
         cursor.move_page_down(root, view, metrics);
     }
 
+    fn move_cursor_half_page_up(root: Buffer.Root, cursor: *Cursor, view: *const View, metrics: Buffer.Metrics) !void {
+        cursor.move_half_page_up(root, view, metrics);
+    }
+
+    fn move_cursor_half_page_down(root: Buffer.Root, cursor: *Cursor, view: *const View, metrics: Buffer.Metrics) !void {
+        cursor.move_half_page_down(root, view, metrics);
+    }
+
+
     pub fn primary_click(self: *Self, y: c_int, x: c_int) !void {
         if (self.fast_scroll)
             try self.push_cursor()
@@ -2692,6 +2701,23 @@ pub const Editor = struct {
         self.clamp();
     }
     pub const move_end_meta = .{ .description = "Move cursor to end of line" };
+    
+    pub fn move_half_page_up(self: *Self, _: Context) Result {
+        try self.send_editor_jump_source();
+        const root = try self.buf_root();
+        try self.with_cursors_and_view_const(root, move_cursor_half_page_up, &self.view);
+        self.clamp();
+    }
+    pub const move_half_page_up_meta = .{ .description = "Move cursor half page up" };
+
+    pub fn move_half_page_down(self: *Self, _: Context) Result {
+        try self.send_editor_jump_source();
+        const root = try self.buf_root();
+        try self.with_cursors_and_view_const(root, move_cursor_half_page_down, &self.view);
+        self.clamp();
+    }
+    pub const move_half_page_down_meta = .{ .description = "Move cursor half page down" };
+
 
     pub fn move_page_up(self: *Self, _: Context) Result {
         try self.send_editor_jump_source();

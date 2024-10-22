@@ -88,8 +88,8 @@ fn mapPress(self: *Self, keypress: u32, egc: u32, modifiers: u32) !void {
     return switch (modifiers) {
         mod.CTRL => switch (keynormal) {
             'E' => self.cmd("open_recent", .{}),
-            'U' => self.cmd("move_scroll_page_up", .{}),
-            'D' => self.cmd("move_scroll_page_down", .{}),
+            'U' => self.cmd("move_half_page_up", .{}),
+            'D' => self.cmd("move_half_page_down", .{}),
             'R' => self.cmd("redo", .{}),
             'O' => self.cmd("jump_back", .{}),
             'I' => self.cmd("jump_forward", .{}),
